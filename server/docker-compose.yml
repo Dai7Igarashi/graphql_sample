@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  graphql-mysql-sample:
+    image: mysql:8.2
+    container_name: graphql-mysql-sample
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: graphql_test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root-password

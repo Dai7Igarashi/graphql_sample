@@ -1,0 +1,43 @@
+# tweet一覧取得のdocument
+query GetTweets($text: String) {
+  tweets(text: $text) {
+    ... on Tweet {
+      __typename
+      id
+      content
+      author {
+        ... on User {
+          __typename
+          id
+          name
+        }
+        ... on UserNotFound {
+          code
+        }
+      }
+    }
+    ... on InvalidTweet {
+      __typename
+      code
+    }
+  }
+}
+
+# tweet投稿のdocument
+mutation CreateTweet($userId: ID!, $data: TweetInput!) {
+  createTweet(userId: $userId, data: $data) {
+    __typename
+    id
+    content
+    author {
+      ... on User {
+        __typename
+        id
+        name
+      }
+      ... on UserNotFound {
+        code
+      }
+    }
+  }
+}

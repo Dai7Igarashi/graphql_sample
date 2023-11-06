@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. モデル(テーブル構造)を定義する
+// 2. migrateコマンドでDBに反映する
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  tweets    Tweet[]   @relation("tweets") // DBには存在しないprisma用のカラム
+  comments  Comment[] @relation("comments") // DBには存在しないprisma用のカラム
+  createdAt DateTime  @default(now())
+}
+
+model Tweet {
+  id        Int       @id @default(autoincrement())
+  content   String    @db.VarChar(140)
+  author    User      @relation("tweets", fields: [authorId], references: [id]) // DBには存在しないprisma用のカラム
+  authorId  Int
+  comments  Comment[] @relation("commentsOfTweet") // DBには存在しないprisma用のカラム
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @db.VarChar(140)
+  author    User     @relation("comments", fields: [authorId], references: [id]) // DBには存在しないprisma用のカラム
+  authorId  Int
+  tweet     Tweet    @relation("commentsOfTweet", fields: [tweetId], references: [id]) // DBには存在しないprisma用のカラム
+  tweetId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

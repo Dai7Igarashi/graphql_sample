@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/server.ts",
+    "start": "ts-node ./src/server.ts",
+    "db:migrate": "npx prisma migrate dev",
+    "studio": "npx prisma studio"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  },
+  "author": "<igarashi_daichi@cyberagent.co.jp>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.8.10",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.5.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.9.5",
+    "@prisma/client": "^5.5.2",
+    "graphql": "^16.8.1"
+  }
+}

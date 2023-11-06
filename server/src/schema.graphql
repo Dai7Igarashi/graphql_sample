@@ -1,0 +1,60 @@
+# Query(予約語): GETリクエストの一番大元になるオペレーションの一覧
+type Query {
+  # user(id: ID!): 指定IDのユーザ取得
+  user(id: ID!): userResult!
+  # users(name: String): ユーザ一覧取得
+  # 任意の引数nameを指定すると、resolver側でnameを部分一致で含むユーザのみ取得する
+  users(name: String): [User!]!
+  # tweets(text: String): tweet一覧取得
+  # 任意の引数textを指定すると、resolver側でtextを部分一致で含むtweetのみ取得する
+  tweets(text: String): [tweetsResult!]!
+  # comments(text: String): comment一覧取得
+  # 任意の引数textを指定すると、resolver側でtextを部分一致で含むcommentのみ取得する
+  comments(text: String): [Comment!]!
+}
+
+# User: prismaで定義したモデルに従ってgraphql側で必要なものをスキーマに定義する
+type User {
+  id: ID! # ID: 一意のID
+  name: String!
+  tweets: [tweetsResult!]! # DBのリレーションに従って、ユーザが投稿したtweetが取得できるようにする
+  comments: [Comment!]! # DBのリレーションに従って、ユーザが投稿したcommentが取得できるようにする
+}
+
+type Tweet {
+  id: ID!
+  content: String!
+  author: userResult! # DBのリレーションに従って、ツイートの投稿者が取得できるようにする
+  comments: [Comment!]! # DBのリレーションに従って、ツイートに対するコメントが取得できるようにする
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  author: userResult! # DBのリレーションに従って、コメントの投稿者が取得できるようにする
+  tweet: tweetsResult! # DBのリレーションに従って、コメントが投稿されたツイートが取得できるようにする
+}
+
+# エラーハンドリング
+union userResult = User | UserNotFound
+
+type UserNotFound {
+  code: String!
+}
+
+union tweetsResult = Tweet | InvalidTweet
+
+type InvalidTweet {
+  code: String!
+}
+
+# Mutation(予約語): POST/PATCH/DELETEリクエストの一番大元になるオペレーションの一覧
+type Mutation {
+  createTweet(userId: ID!, data: TweetInput!): Tweet!
+  updateTweet(tweetId: ID!, data: TweetInput!): Tweet!
+  deleteTweet(tweetId: ID!): Tweet!
+}
+
+input TweetInput {
+  content: String!
+}

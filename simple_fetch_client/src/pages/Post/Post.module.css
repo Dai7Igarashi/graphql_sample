@@ -1,0 +1,17 @@
+.Block {
+  font-size: 12px;
+  padding: 8px 0;
+}
+
+.Label {
+  display: block;
+}
+
+.Label:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.LabelText {
+  display: inline-block;
+  width: 56px;
+}
